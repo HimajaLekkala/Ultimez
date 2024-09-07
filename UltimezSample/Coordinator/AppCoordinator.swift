@@ -12,6 +12,7 @@ enum Screen: String, Identifiable {
 
 class AppCoordinator: ObservableObject {
     @Published var path = NavigationPath()
+    var networkManager = NetworkManager()
     
     func push(screen: Screen) {
         self.path.append(screen)
@@ -25,7 +26,7 @@ class AppCoordinator: ObservableObject {
     func buildScreen(screen: Screen) -> some View {
         switch screen {
         case .productList:
-            ProductListView()
+            ProductListView(viewModel: ProductsListViewModel(productService: ProductListService(networkService: self.networkManager)))
         case .productDetail:
             ProductDetailView()
         }
