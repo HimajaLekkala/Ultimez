@@ -1,13 +1,6 @@
-//
-//  ContentView.swift
-//  UltimezSample
-//
-//  Created by himaja on 06/09/24.
-//
-
 import SwiftUI
 
-struct ContentView: View {
+struct ProductListView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +13,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ProductListView()
 }
