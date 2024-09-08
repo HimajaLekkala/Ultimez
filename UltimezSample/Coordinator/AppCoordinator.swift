@@ -1,12 +1,17 @@
 import Foundation
 import SwiftUI
 
-enum Screen: String, Identifiable {
+enum Screen: Identifiable, Hashable {
     case productList
-    case productDetail
+    case productDetail(product: ProductsListResultModel)
     
     var id: String {
-        return self.rawValue
+        switch self {
+        case .productDetail(_):
+            return "productDetail"
+        case .productList:
+            return "productList"
+        }
     }
 }
 
@@ -27,8 +32,8 @@ class AppCoordinator: ObservableObject {
         switch screen {
         case .productList:
             ProductListView(viewModel: ProductsListViewModel(productService: ProductListService(networkService: self.networkManager)))
-        case .productDetail:
-            ProductDetailView()
+        case .productDetail(let product):
+            ProductDetailView(product: product)
         }
     }
 }

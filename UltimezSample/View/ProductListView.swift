@@ -47,6 +47,7 @@ struct ProductGridView: View {
 
 struct ProductRow: View {
     let product: ProductsListResultModel
+    @EnvironmentObject var coordinator: AppCoordinator
     
     var body: some View {
         VStack(spacing: 16) {
@@ -73,6 +74,9 @@ struct ProductRow: View {
                 .stroke(Color.primary.opacity(0.1), lineWidth: 1)
         )
         .shadow(color: Color.primary.opacity(0.1), radius: 6, x: 0, y: 4)
+        .onTapGesture {
+            coordinator.push(screen: .productDetail(product: product))
+        }
     }
 }
 
