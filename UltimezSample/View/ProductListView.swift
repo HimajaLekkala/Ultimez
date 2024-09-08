@@ -10,13 +10,37 @@ struct ProductListView: View {
             } else if let errorMessage = viewModel.errorMessage {
                 Text("Error: \(errorMessage)")
             } else if let products = viewModel.products {
-                List(products.results, id: \.self) { product in
-                    ProductRow(product: product)
-                }
+                ProductGridView(products: products)
             } else {
                 Text("No products available")
             }
         }
+        .background(Color(.systemBackground))
+    }
+}
+
+struct ProductGridView: View {
+    let products: ProductsListModel
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Products")
+                .font(.title)
+                .bold()
+            
+            ScrollView {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 16) {
+                    ForEach(products.results, id: \.self) { product in
+                        ProductRow(product: product)
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
+        .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
     }
 }
 
@@ -24,12 +48,30 @@ struct ProductRow: View {
     let product: ProductsListResultModel
 
     var body: some View {
-        HStack {
+        VStack(spacing: 16) {
+            AsyncImage(url: URL(string: product.imageURLs.first ?? "")) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: 230)
+                    .clipped()
+            } placeholder: {
+                ProgressView()
+                    .frame(height: 230)
+            }
             Text(product.name)
+                .foregroundColor(.primary)
+            
             Spacer()
-            Text("")
         }
-        .padding()
+        .frame(width: (UIScreen.main.bounds.width - 48) / 2, height: 280)
+        .background(Color(.systemBackground))
+        .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+        )
+        .shadow(color: Color.primary.opacity(0.1), radius: 6, x: 0, y: 4)
     }
 }
 
