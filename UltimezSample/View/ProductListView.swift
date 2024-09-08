@@ -6,17 +6,40 @@ struct ProductListView: View {
     
     var body: some View {
         VStack {
-            if viewModel.isLoading {
-                ProgressView("Loading...")
-            } else if let errorMessage = viewModel.errorMessage {
-                Text("Error: \(errorMessage)")
-            } else if let products = viewModel.products {
-                ProductGridView(products: products)
-            } else {
-                Text("No products available")
-            }
+            stateView
         }
         .background(Color(.systemBackground))
+    }
+    
+    @ViewBuilder
+    private var stateView: some View {
+        if viewModel.isLoading {
+            ProgressView("Loading...")
+        } else if let errorMessage = viewModel.errorMessage {
+            ErrorView(message: errorMessage)
+        } else if let products = viewModel.products {
+            ProductGridView(products: products)
+        } else {
+            NoProductsView()
+        }
+    }
+}
+
+struct ErrorView: View {
+    let message: String
+    
+    var body: some View {
+        Text("Error: \(message)")
+            .foregroundColor(.red)
+            .padding()
+    }
+}
+
+struct NoProductsView: View {
+    var body: some View {
+        Text("No products available")
+            .foregroundColor(.secondary)
+            .padding()
     }
 }
 
@@ -51,19 +74,8 @@ struct ProductRow: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            KFImage(URL(string: product.imageURLs.first ?? ""))
-                .placeholder {
-                    ProgressView()
-                        .frame(height: 230)
-                }
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 230)
-                .clipped()
-            
-            Text(product.name)
-                .foregroundColor(.primary)
-            
+            productImage
+            productName
             Spacer()
         }
         .frame(width: (UIScreen.main.bounds.width - 48) / 2, height: 280)
@@ -77,6 +89,23 @@ struct ProductRow: View {
         .onTapGesture {
             coordinator.push(screen: .productDetail(product: product))
         }
+    }
+    
+    private var productImage: some View {
+        KFImage(URL(string: product.imageURLs.first ?? ""))
+            .placeholder {
+                ProgressView()
+                    .frame(height: 230)
+            }
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(height: 230)
+            .clipped()
+    }
+    
+    private var productName: some View {
+        Text(product.name)
+            .foregroundColor(.primary)
     }
 }
 

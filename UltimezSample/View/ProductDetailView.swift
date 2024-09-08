@@ -6,42 +6,50 @@ struct ProductDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            TabView {
-                ForEach(product.imageURLs, id: \.self) { url in
-                    KFImage(URL(string: product.imageURLs.first ?? ""))
-                        .placeholder {
-                            ProgressView()
-                                .frame(height: 300)
-                        }
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 300)
-                        .clipped()
-                }
-            }
-            .tabViewStyle(PageTabViewStyle())
-            .frame(height: 300)
-            .background(Color(UIColor.secondarySystemBackground))
-            .cornerRadius(10)
-            .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
-            
-            Text(product.name)
-                .font(.largeTitle)
-                .bold()
-            
-            Text("$\(product.price)")
-                .font(.title2)
-                .foregroundColor(.green)
-            
-            Text("Created At: \(product.createdAt)")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
+            productImageCarousel
+            productDetails
             Spacer()
         }
         .padding(16)
         .background(Color(UIColor.systemBackground))
     }
+    
+    private var productImageCarousel: some View {
+        TabView {
+            ForEach(product.imageURLs, id: \.self) { url in
+                KFImage(URL(string: url))
+                    .placeholder {
+                           ProgressView()
+                               .frame(height: 300)
+                       }
+                       .resizable()
+                       .aspectRatio(contentMode: .fill)
+                       .frame(height: 300)
+                       .clipped()
+               }
+           }
+           .tabViewStyle(PageTabViewStyle())
+           .frame(height: 300)
+           .background(Color(UIColor.secondarySystemBackground))
+           .cornerRadius(10)
+           .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
+       }
+
+       private var productDetails: some View {
+           VStack(alignment: .leading, spacing: 8) {
+               Text(product.name)
+                   .font(.largeTitle)
+                   .bold()
+               
+               Text("$\(product.price)")
+                   .font(.title2)
+                   .foregroundColor(.green)
+               
+               Text("Created At: \(product.createdAt)")
+                   .font(.subheadline)
+                   .foregroundColor(.secondary)
+           }
+       }
 }
 
 #Preview {
