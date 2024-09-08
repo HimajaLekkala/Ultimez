@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct ProductListView: View {
     @StateObject var viewModel: ProductsListViewModel
@@ -23,7 +24,7 @@ struct ProductGridView: View {
     let products: ProductsListModel
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("Products")
                 .font(.title)
                 .bold()
@@ -46,19 +47,19 @@ struct ProductGridView: View {
 
 struct ProductRow: View {
     let product: ProductsListResultModel
-
+    
     var body: some View {
         VStack(spacing: 16) {
-            AsyncImage(url: URL(string: product.imageURLs.first ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 230)
-                    .clipped()
-            } placeholder: {
-                ProgressView()
-                    .frame(height: 230)
-            }
+            KFImage(URL(string: product.imageURLs.first ?? ""))
+                .placeholder {
+                    ProgressView()
+                        .frame(height: 230)
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(height: 230)
+                .clipped()
+            
             Text(product.name)
                 .foregroundColor(.primary)
             
